@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ERCOT Forecast WDC</title>
+
+    <script src="https://connectors.tableau.com/libs/tableauwdc-2.3.latest.js"></script>
+
+    <style>
+      body { font-family: Arial; margin: 24px; }
+      .btn { padding: 10px 14px; font-size: 16px; cursor: pointer; }
+      pre {
+        background: #f6f8fa; padding: 12px; border-radius: 6px;
+        max-height: 300px; overflow: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>ERCOT Forecast — Tableau Web Data Connector</h2>
+    <p>This WDC fetches <strong>actuals + forecasts</strong> from <code>/tableau_data</code>.</p>
+
+    <button id="loadBtn" class="btn">Load ERCOT Data</button>
+
+    <h4>Preview (raw JSON)</h4>
+    <pre id="preview">Click button to preview...</pre>
+
+    <script>
+      // 1️⃣ Create connector
+      const myConnector = tableau.makeConnector();
+
+      // 2️⃣ Schema (datetime column!)
+      myConnector.getSchema = function(schemaCallback) {
+        schemaCallback([{
+          id: "ercot_table",
+          alias: "ERCOT Forecast + Actuals",
+          columns: [
+            { id: "timestamp", dataType: tableau.dataTypeEnum.datetime },
+            { id: "value", dataType: tableau.dataTypeEnum.float },
+            { id: "type", dataType: tableau.dataTypeEnum.string }
+          ]
+        }]);
+      };
+
+      // 3️⃣ Fetch from /tableau_data — already perfect format
+      myConnector.getData = function(table, doneCallback) {
+        const url = "http://127.0.0.1:8001/tableau_data";
+
+        fetch(url)
+          .then(r => r.json())
+          .then(data => {
+            console.log("Fetched rows:", data.length);
+
+            // data is already an array of {timestamp, value, type}
+            table.appendRows(data);
+            doneCallback();
+          })
+          .catch(err => {
+            console.error("Fetch failed:", err);
+            doneCallback();
+          });
+      };
+
+      tableau.registerConnector(myConnector);
+
+      // 4️⃣ UI button to preview + run connector
+      document.getElementById("loadBtn").addEventListener("click", function() {
+        const url = "http://127.0.0.1:8001/tableau_data";
+
+        fetch(url)
+          .then(r => r.text())
+          .then(txt => document.getElementById("preview").textContent = txt);
+
+        tableau.connectionName = "ERCOT Load Forecast + Actuals";
+        tableau.submit();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+[INFO] Scheduler started.
+
+[1m1/1[0m [32m====================[0m[37m[0m [1m0s[0m 618ms/step
+[1m1/1[0m [32m====================[0m[37m[0m [1m1s[0m 652ms/step
+INFO:     127.0.0.1:62133 - "GET /forecast_realtime HTTP/1.1" 200 OK
+
+[1m1/1[0m [32m====================[0m[37m[0m [1m0s[0m 22ms/step
+[1m1/1[0m [32m====================[0m[37m[0m [1m0s[0m 40ms/step
+INFO:     127.0.0.1:55951 - "GET /forecast_realtime HTTP/1.1" 200 OK
+
+[1m1/1[0m [32m====================[0m[37m[0m [1m0s[0m 24ms/step
+[1m1/1[0m [32m====================[0m[37m[0m [1m0s[0m 45ms/step
+INFO:     127.0.0.1:53895 - "GET /forecast_realtime HTTP/1.1" 200 OK
+
+[1m1/1[0m [32m====================[0m[37m[0m [1m0s[0m 29ms/step
+[1m1/1[0m [32m====================[0m[37m[0m [1m0s[0m 56ms/step
+INFO:     127.0.0.1:53280 - "GET /forecast_realtime HTTP/1.1" 200 OK
