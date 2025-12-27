@@ -42,3 +42,7 @@ Tableau consumes data from the FastAPI endpoints through a Web Data Connector (W
 Auto-Refresh Behavior
 
 The dashboard updates dynamically whenever the data source is refreshed. Each refresh triggers a new API call to the FastAPI backend, which retrieves fresh ERCOT data and generates updated forecasts. This enables near real-time monitoring, with refresh frequency controlled by the user or scheduling environment.
+
+🔗 Live Dashboard:
+https://public.tableau.com/views/Ercotenergydashboard/Dashboard1
+
