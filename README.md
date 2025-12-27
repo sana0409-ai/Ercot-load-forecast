@@ -1,48 +1,121 @@
-Real-Time ERCOT Load Forecasting Dashboard
+ Project Overview
+
+This project develops a real-time short-term electricity load forecasting system for the Texas power grid (ERCOT). The goal is to accurately predict next-2-hour electricity demand using deep learning models and deploy the solution as a live, continuously updating analytics pipeline.
+
+Unlike traditional forecasting projects, this work goes beyond offline model evaluation by implementing a production-style architecture that connects live grid data, machine learning inference, APIs, and interactive dashboards.
+
  Problem Statement
 
-Accurate short-term electricity load forecasting is critical for grid reliability and operational planning. Traditional dashboards often rely on static or delayed data, limiting their usefulness for real-time decision-making. This project addresses the need for near real-time load monitoring and forecast evaluation using live grid data.
+Accurate short-term load forecasting is critical for grid reliability, cost control, and blackout prevention. Even small forecasting errors can lead to expensive emergency power purchases or system overloads. This project addresses that challenge by identifying the most effective RNN-based model for near-term forecasting and operational deployment.
 
- Real-Time Data Source
+Data Source (Real-Time + Historical)
 
-The system ingests live electricity demand data from the ERCOT Grid Status API via the GridStatus Python library. This ensures access to up-to-date operational load values published by ERCOT, reflecting current grid conditions.
+ERCOT Electricity Load Data (2020–2025)
 
- Machine Learning Model
+Hourly system-wide and regional load data
 
-A time-series forecasting model is used to generate next-hour load predictions based on the most recent 24 hours of observed demand. The model is trained offline and applied in real time for inference, enabling continuous forecast updates as new data arrives.
+Live operational data retrieved using ERCOT / GridStatus APIs
 
- FastAPI Backend
+Machine Learning Models
 
-A FastAPI service acts as the real-time inference and data-serving layer. It:
+The following RNN architectures were implemented and compared:
 
-Fetches the latest ERCOT load data
+Vanilla RNN
 
-Preprocesses and aggregates data to an hourly level
+LSTM
 
-Runs the forecasting model
+Bidirectional LSTM
 
-Exposes actual and forecasted load values through REST endpoints
+GRU
 
-These endpoints are designed for direct consumption by analytics and visualization tools.
+Each model was trained in:
 
- Tableau Visualization Layer
+Univariate mode (total ERCOT load only)
 
-An interactive Tableau dashboard serves as the frontend for the system. It visualizes:
+Multivariate mode (regional loads + time features)
 
-Actual vs forecasted load over time
+Best Model:
 
-Current system load
+Bidirectional LSTM (after hyperparameter tuning)
+
+Achieved the lowest RMSE and MAPE for next-2-hour forecasts
+
+ Model Pipeline
+
+Sliding window: past 24 hours → predict next 2 hours
+
+MinMax scaling (training-only fit)
+
+Hyperparameter tuning using Optuna
+
+Evaluation using RMSE, MAE, and MAPE
+
+ Deployment Architecture
+
+FastAPI backend:
+
+Fetches live ERCOT data
+
+Applies preprocessing + trained BiLSTM model
+
+Generates real-time forecasts via API endpoints
+
+Tableau Web Data Connector (WDC):
+
+Pulls live actual + forecast data on refresh
+
+Enables automated dashboard updates
+
+ Visualization (Tableau Dashboard)
+
+The Tableau dashboard provides:
+
+Current ERCOT load
 
 Next-hour forecast
 
-Forecast accuracy using MAPE and qualitative ratings
+Model accuracy (MAPE rating)
 
-Tableau consumes data from the FastAPI endpoints through a Web Data Connector (WDC).
+Actual vs forecast load trends
 
-Auto-Refresh Behavior
+Average load by hour of day
 
-The dashboard updates dynamically whenever the data source is refreshed. Each refresh triggers a new API call to the FastAPI backend, which retrieves fresh ERCOT data and generates updated forecasts. This enables near real-time monitoring, with refresh frequency controlled by the user or scheduling environment.
+The dashboard refreshes dynamically as new grid data arrives, enabling real-time monitoring and evaluation.
 
-🔗 Live Dashboard:
+ Key Insights
+
+Multivariate BiLSTM and GRU models performed best after tuning
+
+Adding regional features significantly improved accuracy
+
+Vanilla RNN underperformed for long temporal dependencies
+
+A complete ML + API + BI pipeline is feasible for live grid operations
+
+ Tech Stack
+
+Python, TensorFlow / Keras
+
+FastAPI
+
+Optuna
+
+Tableau
+
+ERCOT / GridStatus APIs
+
+ Impact
+
+This project demonstrates how machine learning can support:
+
+Grid operators (reliability & cost reduction)
+
+Renewable energy planning
+
+Smart grid & IoT systems
+
+Real-world ML deployment workflows
+
+ Live Dashboard:
 https://public.tableau.com/views/Ercotenergydashboard/Dashboard1
 
