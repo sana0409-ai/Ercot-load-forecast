@@ -119,3 +119,12 @@ Real-world ML deployment workflows
  Live Dashboard:
 https://public.tableau.com/views/Ercotenergydashboard/Dashboard1
 
+##  Model Development
+
+All model training, experimentation, and evaluation were conducted in a Colab notebook:
+
+- `notebooks/ercot_load_forecasting_models.ipynb`
+
+This notebook includes data preprocessing, feature engineering, model training, and performance evaluation used in the real-time forecasting pipeline.
+
+
